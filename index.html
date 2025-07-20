@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fotos 15 anos Izabela</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f5f0f8;
+      color: #333;
+      text-align: center;
+    }
+    header {
+      position: relative;
+    }
+    header img {
+      width: 100%;
+      max-height: 400px;
+      object-fit: cover;
+      border-bottom: 5px solid #a267c0;
+    }
+    h1 {
+      color: #6a1b9a;
+      font-size: 2.5em;
+      margin: 30px 0 10px;
+    }
+    p.subtitle {
+      font-size: 1.2em;
+      margin-bottom: 40px;
+    }
+    form {
+      margin-bottom: 40px;
+    }
+    input[type="file"] {
+      margin: 20px 0;
+    }
+    .gallery {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+      padding: 1rem;
+    }
+    .gallery img {
+      max-width: 200px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    button {
+      background-color: #7a2d99;
+      color: white;
+      border: none;
+      padding: 0.7rem 1.2rem;
+      font-size: 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #5a2173;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="https://res.cloudinary.com/dbslpalht/image/upload/v1752965357/WhatsApp_Image_2025-07-17_at_18.11.10_ikmxuy.jpg" alt="Izabela" />
+  </header>
+
+  <h1>15 anos da Izabela 💜</h1>
+  <p class="subtitle">Que bom ter você no meu aniversário!<br />
+    Compartilhe aqui comigo as suas melhores fotos do evento.
+  </p>
+
+  <form id="upload-form">
+    <input type="file" id="image-input" accept="image/*" /> <br />
+    <button type="submit">Enviar Foto</button>
+  </form>
+
+  <p>💖 Obrigada por enviar suas fotos!<br />📷 Veja a galeria completa da festa:</p>
+
+  <div class="gallery" id="gallery"></div>
+
+  <script>
+    const cloudName = "dbslpalht";
+    const uploadPreset = "festa-izabela"; 
+
+    const form = document.getElementById("upload-form");
+    const imageInput = document.getElementById("image-input");
+    const gallery = document.getElementById("gallery");
+
+    let uploadedImages = [];
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const file = imageInput.files[0];
+      if (!file) return;
+
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", uploadPreset);
+
+      const res = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await res.json();
+      if (data.secure_url) {
+        uploadedImages.push(data.secure_url);
+        renderGallery();
+      }
+    });
+
+    function renderGallery() {
+      gallery.innerHTML = uploadedImages
+        .map((url) => `<img src="${url}" alt="Foto da festa" />`)
+        .join("");
+    }
+  </script>
+</body>
+</html>
